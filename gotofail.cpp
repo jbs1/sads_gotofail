@@ -8,6 +8,12 @@ typedef string SSLContext;
 typedef int SSLBuffer;
 
 
+//testing parameters
+int serverRandom = 0; //nonzero == fail > gotofail for first sha1 methode
+SSLBuffer sigpar= 0; //nonzero == fail > gotofail for second sha1 methode
+string hashOut = "fail"; //"fail" == error condition > gotofail for third sha1 methode
+
+
 class SSLHashSHA1
 {
 	SSLHashSHA1();
@@ -18,23 +24,25 @@ class SSLHashSHA1
 };
 
 OSStatus SSLHashSHA1::update(string* ctx, int* ran){
-	return 0;
+	return *ran;
 }
 
 OSStatus SSLHashSHA1::final(string* ctx, string* out){
-	return 0;
+	if ((*out).compare("fail")==0){
+		return 1;
+	} else {
+		return 0;
+	}
 }
 
 void SSLFreeBuffer(string* shash){
-	cout << "freebuff:" << *shash <<endl;
 }
 
 
 
 string signedHashes = "hashstuff";
 string hashCtx = "hashsontext";
-int serverRandom = 123832131;
-string hashOut = "hashouttext";
+
 
 static OSStatus SSLVerifySignedServerKeyExchange(
 	SSLContext *ctx, bool isRsa, SSLBuffer signedParams, uint8_t *signature, uint16_t signatureLen)
@@ -60,11 +68,11 @@ int main(int argc, char const *argv[])
 {
 	SSLContext ctx = "bla";
 	bool isrsa = true;
-	SSLBuffer sigpar= 1234;
 	uint8_t sig= 12;
 	uint16_t siglen= 5678;
 
 	OSStatus result = SSLVerifySignedServerKeyExchange(&ctx,isrsa,sigpar,&sig,siglen);
+	cout << result <<endl;
 
 
 	return 0;

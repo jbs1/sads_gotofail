@@ -65,7 +65,7 @@ static OSStatus SSLVerifySignedServerKeyExchange(SSLContext *ctx, bool isRsa, SS
 		goto fail;
 	if ((err = SSLHashSHA1::update(&hashCtx, &signedParams)) != 0)
 		goto fail;
-		goto fail;
+		//goto fail;
 	if ((err = SSLHashSHA1::final(&hashCtx, &hashOut)) != 0)
 		goto fail;
 

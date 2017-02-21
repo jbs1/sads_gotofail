@@ -38,12 +38,10 @@ class SSLHashSHA1
 };
 
 OSStatus SSLHashSHA1::update(string* ctx, int* ran){
-	//cout << "--------" << *ran<<endl;
 	return *ran;
 }
 
 OSStatus SSLHashSHA1::final(string* ctx, string* out){
-	//cout << "--------" << *out<<endl;
 	if ((*out).compare("fail")==0){
 		return 1;
 	} else {
@@ -65,7 +63,7 @@ static OSStatus SSLVerifySignedServerKeyExchange(SSLContext *ctx, bool isRsa, SS
 		goto fail;
 	if ((err = SSLHashSHA1::update(&hashCtx, &signedParams)) != 0)
 		goto fail;
-		//goto fail;
+		goto fail;
 	if ((err = SSLHashSHA1::final(&hashCtx, &hashOut)) != 0)
 		goto fail;
 
@@ -121,8 +119,6 @@ bool unittest(){
 
 
 
-
-
 int main(int argc, char const *argv[])
 {
 	if (argc==2 && strcmp(argv[1],"testing")==0){
@@ -130,9 +126,6 @@ int main(int argc, char const *argv[])
 	}
 
 	//OSStatus result = SSLVerifySignedServerKeyExchange(&ctx,isrsa,sigpar,&sig,siglen);
-	// cout << argc <<endl;
-
-
 
 	return 0;
 }

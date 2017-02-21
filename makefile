@@ -1,6 +1,5 @@
 gotofail: gotofail.cpp
-	g++ -o gotofail -Wall -std=c++11 gotofail.cpp
-
+	$(CXX) -o gotofail -Wall -std=c++11 gotofail.cpp
 
 run: gotofail
 	./gotofail

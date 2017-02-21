@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <cstdint>
+#include <cstring>
 
 using namespace std;
 typedef int OSStatus;
@@ -68,7 +69,6 @@ static OSStatus SSLVerifySignedServerKeyExchange(SSLContext *ctx, bool isRsa, SS
 	if ((err = SSLHashSHA1::final(&hashCtx, &hashOut)) != 0)
 		goto fail;
 
-	cout << "nonfail" << endl;
 
 	fail:
 		SSLFreeBuffer(&signedHashes);
@@ -76,29 +76,46 @@ static OSStatus SSLVerifySignedServerKeyExchange(SSLContext *ctx, bool isRsa, SS
 		return err;
 }
 
-void unittest(){
+bool unittest(){
 	//all tests passing
-	cout << "-----nonfail: result should be ZERO-----" << endl;
-	cout<<SSLVerifySignedServerKeyExchange(&ctx,isrsa,sigpar,&sig,siglen)<<endl;
+	cout << "TESTING nonfail" << endl;
+	result = SSLVerifySignedServerKeyExchange(&ctx,isrsa,sigpar,&sig,siglen);
+	if(result != 0){
+		cout << "FAIL!" << endl;
+		return true;
+	}
 
 
 	//first test fail
-	cout << "-----firstfail: result should be NONZERO-----" << endl;
+	cout << "TESTING first fail" << endl;
 	serverRandom = 1;
-	cout << SSLVerifySignedServerKeyExchange(&ctx,isrsa,sigpar,&sig,siglen)<<endl;
+	result = SSLVerifySignedServerKeyExchange(&ctx,isrsa,sigpar,&sig,siglen);
 	serverRandom = 0;
+	if(result == 0){
+		cout << "FAIL!" << endl;
+		return true;
+	}
 
 	//second test fail
-	cout << "-----secondfail: result should be NONZERO-----" << endl;
-	sigpar= 1;
-	cout<<SSLVerifySignedServerKeyExchange(&ctx,isrsa,sigpar,&sig,siglen)<<endl;
-	sigpar= 0;
+	cout << "TESTING second fail" << endl;
+	sigpar = 1;
+	result = SSLVerifySignedServerKeyExchange(&ctx,isrsa,sigpar,&sig,siglen);
+	sigpar = 0;
+	if(result == 0){
+		cout << "FAIL!" << endl;
+		return true;
+	}
 
 	//third test fail
-	cout << "-----thirdfail: result should be NONZERO-----" << endl;
+	cout << "TESTING third fail" << endl;
 	hashOut = "fail";
-	cout<<SSLVerifySignedServerKeyExchange(&ctx,isrsa,sigpar,&sig,siglen)<<endl;
+	result = SSLVerifySignedServerKeyExchange(&ctx,isrsa,sigpar,&sig,siglen);
 	hashOut = "nonfail";
+	if(result == 0){
+		cout << "FAIL!" << endl;
+		return true;
+	}
+	return false;
 
 }
 
@@ -108,10 +125,14 @@ void unittest(){
 
 int main(int argc, char const *argv[])
 {
+	if (argc==2 && strcmp(argv[1],"testing")==0){
+		return unittest();
+	}
 
 	//OSStatus result = SSLVerifySignedServerKeyExchange(&ctx,isrsa,sigpar,&sig,siglen);
-	//cout << result <<endl;
-	unittest();
+	// cout << argc <<endl;
+
+
 
 	return 0;
 }

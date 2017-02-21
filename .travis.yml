@@ -1,0 +1,3 @@
+install: false
+complier: g++
+script: make && make test

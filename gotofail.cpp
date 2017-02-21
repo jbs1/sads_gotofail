@@ -78,24 +78,24 @@ static OSStatus SSLVerifySignedServerKeyExchange(SSLContext *ctx, bool isRsa, SS
 
 void unittest(){
 	//all tests passing
-	cout << "-----nonfail-----" << endl;
+	cout << "-----nonfail: result should be ZERO-----" << endl;
 	cout<<SSLVerifySignedServerKeyExchange(&ctx,isrsa,sigpar,&sig,siglen)<<endl;
 
 
 	//first test fail
-	cout << "-----firstfail-----" << endl;
+	cout << "-----firstfail: result should be NONZERO-----" << endl;
 	serverRandom = 1;
 	cout << SSLVerifySignedServerKeyExchange(&ctx,isrsa,sigpar,&sig,siglen)<<endl;
 	serverRandom = 0;
 
 	//second test fail
-	cout << "-----secondfail-----" << endl;
+	cout << "-----secondfail: result should be NONZERO-----" << endl;
 	sigpar= 1;
 	cout<<SSLVerifySignedServerKeyExchange(&ctx,isrsa,sigpar,&sig,siglen)<<endl;
 	sigpar= 0;
 
 	//third test fail
-	cout << "-----thirdfail-----" << endl;
+	cout << "-----thirdfail: result should be NONZERO-----" << endl;
 	hashOut = "fail";
 	cout<<SSLVerifySignedServerKeyExchange(&ctx,isrsa,sigpar,&sig,siglen)<<endl;
 	hashOut = "nonfail";

@@ -1,4 +1,3 @@
-install: false
 complier: g++
 language: cpp
 
